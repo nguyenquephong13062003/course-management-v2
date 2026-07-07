@@ -1,11 +1,24 @@
 package com.example.course_management_v2.model;
 
 import com.example.course_management_v2.enums.CourseStatus;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "courses")
 public class Course implements Identifiable{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private CourseStatus status;
+
+    @Column(name = "instructor_id")
     private Long instructorId;
 
     public Course() {
