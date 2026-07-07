@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "instructors")
-public class Instructor implements Identifiable{
+@Table(name = "students")
+public class Student implements Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,19 +19,19 @@ public class Instructor implements Identifiable{
     @Column(nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "instructor")
-    private List<Course> courses = new ArrayList<>();
+    @OneToMany(mappedBy = "student")
+    private List<StudentEnrollment> enrollments = new ArrayList<>();
 
-    public Instructor() {
+    public Student() {
     }
 
-    public Instructor(Long id, String name, String email) {
+    public Student(Long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
     }
 
-    public Instructor(String name, String email) {
+    public Student(String name, String email) {
         this.name = name;
         this.email = email;
     }
@@ -40,6 +40,7 @@ public class Instructor implements Identifiable{
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -60,21 +61,11 @@ public class Instructor implements Identifiable{
         this.email = email;
     }
 
-    public List<Course> getCourses() {
-        return courses;
+    public List<StudentEnrollment> getEnrollments() {
+        return enrollments;
     }
 
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
+    public void setEnrollments(List<StudentEnrollment> enrollments) {
+        this.enrollments = enrollments;
     }
-
-    @Override
-    public String toString() {
-        return "Instructor{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
-
 }
