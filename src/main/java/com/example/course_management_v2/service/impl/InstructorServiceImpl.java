@@ -46,7 +46,7 @@ public class InstructorServiceImpl implements IInstructorService {
                         request.getName(),
                         request.getEmail());
 
-        return repository.save(instructor);
+        return instructorRepository.save(instructor);
     }
 
     @Override
@@ -60,9 +60,10 @@ public class InstructorServiceImpl implements IInstructorService {
 
         Instructor existingInstructor = getInstructorById(id);
 
-        instructor.setId(id);
+        existingInstructor.setName(instructor.getName());
+        existingInstructor.setEmail(instructor.getEmail());
 
-        return instructorRepository.save(instructor);
+        return instructorRepository.save(existingInstructor);
     }
 
     @Override

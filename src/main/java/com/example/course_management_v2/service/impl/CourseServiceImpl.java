@@ -63,9 +63,11 @@ public class CourseServiceImpl implements ICourseService {
             throw new RuntimeException("Instructor of course not found.");
         }
 
-        course.setId(id);
+        existingCourse.setTitle(course.getTitle());
+        existingCourse.setStatus(course.getStatus());
+        existingCourse.setInstructor(course.getInstructor());
 
-        return courseRepository.save(course);
+        return courseRepository.save(existingCourse);
     }
 
     @Override

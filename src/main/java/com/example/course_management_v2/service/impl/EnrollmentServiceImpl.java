@@ -95,9 +95,16 @@ public class EnrollmentServiceImpl implements IEnrollmentService {
             throw new RuntimeException("Instructor of enrollment's course not found.");
         }
 
-        enrollment.setId(id);
+        Enrollment existingEnrollment =
+                getEnrollmentById(id);
 
-        return enrollmentRepository.save(enrollment);
+        existingEnrollment.setStudentName(
+                enrollment.getStudentName());
+
+        existingEnrollment.setCourseId(
+                enrollment.getCourseId());
+
+        return enrollmentRepository.save(existingEnrollment);
     }
 
     @Override
