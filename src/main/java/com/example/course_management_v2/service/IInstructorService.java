@@ -11,6 +11,8 @@ public interface IInstructorService {
 
     Instructor createInstructor(Instructor instructor);
 
+    Instructor createInstructor(InstructorCreateRequest request);
+
     Instructor updateInstructor(Long id, Instructor instructor);
 
     Instructor deleteInstructorById(Long id);

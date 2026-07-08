@@ -4,13 +4,15 @@ import com.example.course_management_v2.model.Instructor;
 import com.example.course_management_v2.repository.IInstructorRepository;
 import com.example.course_management_v2.utils.IdGenerator;
 import org.springframework.stereotype.Repository;
+import org.springframework.context.annotation.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 
-@Repository
+// @Repository
+// @Profile("old")
 public class InstructorRepositoryImpl implements IInstructorRepository {
     private final List<Instructor> instructors = new ArrayList<>();
 
