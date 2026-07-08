@@ -4,12 +4,14 @@ import com.example.course_management_v2.model.Enrollment;
 import com.example.course_management_v2.repository.IEnrollmentRepository;
 import com.example.course_management_v2.utils.IdGenerator;
 import org.springframework.stereotype.Repository;
+import org.springframework.context.annotation.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+// @Repository
+// @Profile("old")
 public class EnrollmentRepositoryImpl implements IEnrollmentRepository {
     private final List<Enrollment> enrollments = new ArrayList<>();
 

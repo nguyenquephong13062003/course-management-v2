@@ -3,7 +3,8 @@ package com.example.course_management_v2.service.impl;
 import com.example.course_management_v2.enums.CourseStatus;
 import com.example.course_management_v2.model.Course;
 import com.example.course_management_v2.model.Enrollment;
-import com.example.course_management_v2.repository.IEnrollmentRepository;
+// import com.example.course_management_v2.repository.IEnrollmentRepository;
+import com.example.course_management_v2.repository.jpa.EnrollmentRepository;
 import com.example.course_management_v2.service.ICourseService;
 import com.example.course_management_v2.service.IEnrollmentService;
 import com.example.course_management_v2.service.IInstructorService;
@@ -14,13 +15,13 @@ import java.util.List;
 
 @Service
 public class EnrollmentServiceImpl implements IEnrollmentService {
-    private final IEnrollmentRepository enrollmentRepository;
+    private final EnrollmentRepository enrollmentRepository;
     private final ICourseService courseService;
     private final IInstructorService instructorService;
 
     @Autowired
     public EnrollmentServiceImpl(
-            IEnrollmentRepository enrollmentRepository,
+            EnrollmentRepository enrollmentRepository,
             ICourseService courseService,
             IInstructorService instructorService) {
         this.enrollmentRepository = enrollmentRepository;
@@ -60,8 +61,9 @@ public class EnrollmentServiceImpl implements IEnrollmentService {
             throw new RuntimeException("Instructor of enrollment's course not found.");
         }
 
-        return enrollmentRepository.create(enrollment)
-                .orElseThrow(() -> new RuntimeException("Enrollment cannot be created."));
+        enrollment.setId(null);
+
+        return enrollmentRepository.save(enrollment);
     }
 
     @Override
@@ -73,14 +75,29 @@ public class EnrollmentServiceImpl implements IEnrollmentService {
 //            return null;
 //        }
 
+        Enrollment existingEnrollment = getEnrollmentById(id);
+
+        Course course;
+
         try {
-            courseService.getCourseById(enrollment.getCourseId());
+            course = courseService.getCourseById(enrollment.getCourseId());
         } catch (RuntimeException e) {
             throw new RuntimeException("Course of enrollment not found.");
         }
 
-        return enrollmentRepository.update(id, enrollment)
-                .orElseThrow(() -> new RuntimeException("Enrollment not found."));
+        if (course.getStatus() == CourseStatus.INACTIVE) {
+            throw new RuntimeException("Course of enrollment is inactive.");
+        }
+
+        try {
+            instructorService.getInstructorById(course.getInstructorId());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Instructor of enrollment's course not found.");
+        }
+
+        enrollment.setId(id);
+
+        return enrollmentRepository.save(enrollment);
     }
 
     @Override
@@ -92,8 +109,11 @@ public class EnrollmentServiceImpl implements IEnrollmentService {
 //            return null;
 //        }
 
-        return enrollmentRepository.deleteById(id)
-                .orElseThrow(() -> new RuntimeException("Enrollment not found."));
+        Enrollment existingEnrollment = getEnrollmentById(id);
+
+        enrollmentRepository.deleteById(id);
+
+        return existingEnrollment;
     }
 
 }

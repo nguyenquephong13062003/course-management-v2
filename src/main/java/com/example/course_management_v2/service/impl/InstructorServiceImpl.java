@@ -1,7 +1,9 @@
 package com.example.course_management_v2.service.impl;
 
+import com.example.course_management_v2.dto.request.InstructorCreateRequest;
 import com.example.course_management_v2.model.Instructor;
-import com.example.course_management_v2.repository.IInstructorRepository;
+// import com.example.course_management_v2.repository.IInstructorRepository;
+import com.example.course_management_v2.repository.jpa.InstructorRepository;
 import com.example.course_management_v2.service.IInstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +12,10 @@ import java.util.List;
 
 @Service
 public class InstructorServiceImpl implements IInstructorService {
-    private final IInstructorRepository instructorRepository;
+    private final InstructorRepository instructorRepository;
 
     @Autowired
-    public InstructorServiceImpl(IInstructorRepository instructorRepository) {
+    public InstructorServiceImpl(InstructorRepository instructorRepository) {
         this.instructorRepository = instructorRepository;
     }
 
@@ -30,8 +32,21 @@ public class InstructorServiceImpl implements IInstructorService {
 
     @Override
     public Instructor createInstructor(Instructor instructor) {
-        return instructorRepository.create(instructor)
-                .orElseThrow(() -> new RuntimeException("Instructor cannot be created."));
+
+        instructor.setId(null);
+
+        return instructorRepository.save(instructor);
+    }
+
+    @Override
+    public Instructor createInstructor(InstructorCreateRequest request){
+
+        Instructor instructor =
+                new Instructor(
+                        request.getName(),
+                        request.getEmail());
+
+        return repository.save(instructor);
     }
 
     @Override
@@ -43,8 +58,11 @@ public class InstructorServiceImpl implements IInstructorService {
 //            return null;
 //        }
 
-        return instructorRepository.update(id, instructor)
-                .orElseThrow(() -> new RuntimeException("Instructor not found."));
+        Instructor existingInstructor = getInstructorById(id);
+
+        instructor.setId(id);
+
+        return instructorRepository.save(instructor);
     }
 
     @Override
@@ -56,8 +74,11 @@ public class InstructorServiceImpl implements IInstructorService {
 //            return null;
 //        }
 
-        return instructorRepository.deleteById(id)
-                .orElseThrow(() -> new RuntimeException("Instructor not found."));
+        Instructor existingInstructor = getInstructorById(id);
+
+        instructorRepository.deleteById(id);
+
+        return existingInstructor;
     }
 
 }
